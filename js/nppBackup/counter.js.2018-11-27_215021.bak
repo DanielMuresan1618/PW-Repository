@@ -1,0 +1,15 @@
+ 
+ window.onload = function(){
+	 wait(2000);
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET","content.php",true);
+		ajax.send();
+		ajax.onreadystatechange = function(){
+		if (this.readyState == 4 )
+			if(this.status == 200){
+			var data = JSON.parse (this.responseText);
+			//document.getElementById("container_story_counter").innerHTML= data[0] + "/10";
+		}
+	}
+	 
+}

@@ -1,0 +1,6 @@
+ 
+ window.onload = function(){
+	 var ceva= '<%= Session["loggeding"] %>';
+	alert (ceva);
+	//document.getElementById("container_story_counter").innerHTML= "<?php echo $_SESSION['scenario'];?>"+"/10";
+}

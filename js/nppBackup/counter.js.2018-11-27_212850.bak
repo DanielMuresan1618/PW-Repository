@@ -1,0 +1,13 @@
+ 
+ window.onload = function(){
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET","content.php",true);
+		ajax.send();
+		ajax.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200){
+			var data = JSON.parse (this.responseText);
+			document.getElementById("container_story_counter").innerHTML= data + "/10";
+		}
+	}
+	 "<?php echo $_SESSION['scenario'];?>"+"/10";
+}

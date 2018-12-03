@@ -1,0 +1,3 @@
+function counter(session){
+	document.getElementById("container_story_counter").innerHTML= "<?php echo $_SESSION['scenario']?>"+"/10";
+}

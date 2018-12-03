@@ -1,0 +1,7 @@
+<?php
+session_start();
+	
+	$rez = $_SESSION['scenario'];
+	$rez = $rez+1;
+	echo json_encode (4);
+?>

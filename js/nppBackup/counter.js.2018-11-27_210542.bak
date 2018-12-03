@@ -1,0 +1,4 @@
+function counter(session){
+	alert ("<?php echo $_SESSION['scenario']?>");
+	document.getElementById("container_story_counter").innerHTML= "<?php echo $_SESSION['scenario']?>"+"/10";
+}

@@ -1,0 +1,68 @@
+<?php 
+	require_once "config.php";
+	session_start();
+	if (!isset($_SESSION['loggedin']))
+		header ("location: ../index.php");
+	else{
+		if (!isset($_GET['c']))
+			header ("location: ../content.php");
+		else{
+		$c = $_GET['c'];
+		$_SESSION['scenario']+=1;
+		if ($_SESSION['scenario']>=10)
+		{
+			
+			$sql= "SELECT Popularity,Mood,Health,Knowledge from clientstats WHERE UserID='$c'";
+			$res = mysqli_query($conn,$sql) or die ("scenario 10 querry error");
+			$res1= mysqli_fetch_assoc ($res);
+			$maxim = max($res1['Popularity'],$res1['Mood'],$res1['Health'],$res1['Knowledge']);
+			
+			if ($maxim == $res1['Popularity'])
+				$outcome = "POPULAR";
+			else
+				if ($maxim == $res1['Health'])
+				$outcome = "SANATOS";
+			else
+			if ($maxim == $res1['Mood'])
+				$outcome = "BINE DISPUS";
+			else 
+				$outcome = "BURSIER";
+
+			$_SESSION['rezultat'] = "Ai iesit" + '$outcome' + "("+ '$maxim'+ ' puncte)' ;
+						echo  $maxim . " " . $outcome . " " . $res1 . " " . $_SESSION[rezultat];
+			echo "<script>
+			
+			window.location.assign ('../content.php');
+			</script>";
+		}
+		else
+		{
+			
+			$sid = $_GET['id'];
+			$uid = $_SESSION['userid'];
+			$sto = "SELECT Story from Stories WHERE StoryID = $sid" or die("eroare select story");
+			$r = mysqli_query($conn,$sto) or die ("eroare query story");
+			$f = mysqli_fetch_assoc ($r);
+			if ($c ==1){
+				$sta = "SELECT Popularity,Mood,Health,Knowledge from statstable1 WHERE StoryID = '$sid'" or die("eroare select stats1");	
+				$r1 = mysqli_query($conn,$sta) or die ("eroare query choice1");
+				$f1 =mysqli_fetch_assoc ($r1) or die ("eroare fetch choice1");
+				$sql = "INSERT INTO userstatstable (UserID,StoryID,Choice,Story,Popularity,Mood,Health,Knowledge) VALUES ('$uid', '$sid','$c','$f[Story]','$f1[Popularity]','$f1[Mood]','$f1[Health]','$f1[Knowledge]')" or die ("insert failed");
+				mysqli_query($conn,$sql) or die ("eroare query final ustats");
+				$sql = "UPDATE clientstats SET Popularity =  Popularity + $f1[Popularity], Mood = Mood + $f1[Mood], Health =  Health + $f1[Health], Knowledge =  Knowledge + $f1[Knowledge] WHERE UserID = $uid";
+				mysqli_query($conn,$sql) or die ("eroare query finalfinal ustats");
+			}
+			else
+				if ($c==2){
+				$sta = "SELECT Popularity,Mood,Health,Knowledge from statstable2 WHERE StoryID = '$sid'" or die("eroare select stats1");	
+				$r1 = mysqli_query($conn,$sta) or die ("eroare query choice2");
+				$f1 =mysqli_fetch_assoc ($r1) or die ("eroare fetch choice2");;
+				$sql = "INSERT INTO userstatstable (UserID,StoryID,Choice,Story,Popularity,Mood,Health,Knowledge) VALUES ('$uid', '$sid','$c','$f[Story]','$f1[Popularity]','$f1[Mood]','$f1[Health]','$f1[Knowledge]')";
+				mysqli_query($conn,$sql) or die ("eroare query final ustats");
+				$sql = "UPDATE clientstats SET Popularity =  Popularity + $f1[Popularity], Mood = Mood + $f1[Mood], Health =  Health + $f1[Health], Knowledge =  Knowledge + $f1[Knowledge] WHERE UserID = $uid";
+				mysqli_query($conn,$sql) or die ("eroare query finalfinal ustats");
+				} 
+			echo "<script>window.location.assign ('../content.php')</script>";
+			}
+	}
+}
